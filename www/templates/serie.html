@@ -1,0 +1,22 @@
+<ion-view view-title="serie">
+	<ion-content>
+	  <form class="list" ng-submit="search(serie)">
+	  	
+		<label class="item item-input">
+			<i class="icon ion-search placeholder-icon"></i>
+			<input  type="text" placeholder="Search" ng-model="serie">
+		</label>
+		<div class="padding">
+			<button class="button button-block button-positive">Send</button>
+		</div>
+	  </form>
+
+	  	<div ng-repeat="serie in series" class="list">
+		    <a class="item item-thumbnail-left" href="#serie/{{ serie.id }}">
+		      <img src="http://image.tmdb.org/t/p/w500/{{ serie.backdrop_path}}">
+		      <h2>{{ serie.original_name }}</h2>
+		      <p>{{ serie.overview | limitTo:10  }}</p>
+		    </a>
+		</div>
+	</ion-content>
+</ion-view>
