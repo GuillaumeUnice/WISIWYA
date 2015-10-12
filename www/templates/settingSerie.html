@@ -1,5 +1,56 @@
-<ion-view>
+<ion-view view-title="Setting serie">
 	<ion-content>
-	{{ serie }}
+	
+		<form ng-submit="addSerie()">
+			<!--
+				<label class="item item-input">
+				  <span class="input-label">Date</span>
+				  <input type="date">
+				</label>
+				<label class="item item-input">
+				  <span class="input-label">Date</span>
+				  <input type="time">
+				</label>
+			-->
+			{{ serie }}
+			<img ng-show="imgURI !== undefined" ng-src="{{imgURI}}">
+		    <img ng-show="imgURI === undefined" ng-src="http://placehold.it/300x300">
+		    <button class="button button-positive" ng-click="takePicture()">Take Picture</button>
+
+			<button class="button button-positive" ng-click="looool()">DatePicker</button>
+
+			<p>Start date :</p>
+			<div class="row">
+  				<div class="col">
+					<ionic-datepicker input-obj="datepickerObject">
+					  <button class="button button-block button-positive"> {{datepickerObject.inputDate | date:'dd - MMMM - yyyy'}}</button>
+					</ionic-datepicker>
+  				</div>
+  				<div class="col">
+					<ionic-timepicker input-obj="timePickerObject">
+					  <button class="button button-block button-positive overflowShow">
+					    <standard-time-meridian etime='timePickerObject.inputEpochTime'></standard-time-meridian>
+					  </button>
+					</ionic-timepicker>
+  				</div>
+  			</div>
+
+  			<p>Alert every :</p>
+  			<div class="row" ng-repeat="alertTime in alertTimes">
+
+			  <label class="item item-radio col">
+			    <input type="radio" name="group">
+			    <div class="item-content">
+			      {{ alertTime }}
+			    </div>
+			    <i class="radio-icon ion-checkmark"></i>
+			  </label>
+
+
+			</div>
+			<div class="padding">
+				
+			</div>
+		</form>
 	</ion-content>
 </ion-view>
