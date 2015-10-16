@@ -1,18 +1,44 @@
 app.controller('serieController', function($scope, $rootScope, $ionicLoading, $stateParams, $cordovaCamera, $cordovaDatePicker, Series) {
-  
 
-$scope.addSerie = function(serie) {
-		console.log(serie);
-	//console.log($scope.serie.group);
-	console.log(group);
-	console.log(serie.group);
-	//$rootScope.serie.push()
+  	$rootScope.alertTimes = [ 'month', 'week', 'minute'];
+	$rootScope.geolocalisations = {
+		school : 
+		{
+			longitute : '47',
+			latitude : '7'
+		},
+		home :
+
+		{
+			longitute : '50',
+			latitude : '8'
+		}
+	}  
+
+$scope.addSerie = function(serie, datepickerObject, timePickerObject) {
+
+			
+		//console.log(serie.group);
+
+
+       /* $scope.serie.startAt.setUTCMonth($scope.timePickerObject.getUTCMonth());
+        $scope.serie.startAt.setUTCDate($scope.timePickerObject.getUTCDate()());
+		$scope.serie.startAt.setUTCFullYear($scope.timePickerObject.getUTCFullYear());
+		*/
+		var selectedTime = new Date(timePickerObject.inputEpochTime * 1000);
+		$rootScope.serieSchedule = serie;
+
+		$rootScope.serieSchedule.startAt = datepickerObject.inputDate;
+
+		//console.log($rootScope.serieSchedule.startAt.getUTCHours());
+		$rootScope.serieSchedule.startAt.setUTCHours(selectedTime.getUTCHours());
+		$rootScope.serieSchedule.startAt.setUTCMinutes(selectedTime.getUTCMinutes());
+		$state.go('home');
+		//console.log($rootScope.serieSchedule.startAt.getUTCHours());		
+		//$rootScope.serieSchedule.startAt.setUTCHours(timePickerObject.getUTCHours());
+		//$rootScope.serieSchedule.startAt.setUTCMinutes(timePickerObject.getUTCMinutes());
+		//console.log('test : ' + datepickerObject.inputDate);	
 }
-  //$scope.serie.group = 'month';
-
-  /*$scope.$on('$routeChangeStart', function(next, current) { 
-   alert('lol');
- });*/
 
 $scope.timePickerObject = {
   inputEpochTime: ((new Date()).getHours() * 60 * 60),  //Optional
@@ -24,23 +50,24 @@ $scope.timePickerObject = {
   setButtonType: 'button-positive',  //Optional
   closeButtonType: 'button-stable',  //Optional
   callback: function (val) {    //Mandatory
-    timePickerCallback(val);
+    this.inputEpochTime = val;
+    console.log(this.inputEpochTime);
   }
 };
+/*
 function timePickerCallback(val) {
   if (typeof (val) === 'undefined') {
     console.log('Time not selected');
   } else {
-    $scope.timePickerObject.inputEpochTime = val;
-    //var selectedTime = new Date(val * 1000);
-    //console.log('Selected epoch is : ', val, 'and the time is ', selectedTime.getUTCHours(), ':', selectedTime.getUTCMinutes(), 'in UTC');
+    var selectedTime = new Date(val * 1000);
+    console.log('Selected epoch is : ', val, 'and the time is ', selectedTime.getUTCHours(), ':', selectedTime.getUTCMinutes(), 'in UTC');
   }
-}
+}*/
 
 
 
  $scope.datepickerObject = {
-      titleLabel: 'Title',  //Optional
+      titleLabel: 'Start at',  //Optional
       todayLabel: 'Today',  //Optional
       closeLabel: 'Close',  //Optional
       setLabel: 'Set',  //Optional
@@ -49,9 +76,6 @@ function timePickerCallback(val) {
       closeButtonType : 'button-assertive',  //Optional
       inputDate: new Date(),    //Optional
       mondayFirst: true,    //Optional
-      //disabledDates: disabledDates, //Optional
-      //weekDaysList: weekDaysList,   //Optional
-      //monthList: monthList, //Optional
       templateType: 'modal', //Optional
       showTodayButton: 'true', //Optional
       modalHeaderColor: 'bar-positive', //Optional
@@ -59,66 +83,46 @@ function timePickerCallback(val) {
       from: new Date(2012, 8, 2),   //Optional
       to: new Date(2018, 8, 25),    //Optional
       callback: function (val) {    //Mandatory
-        datePickerCallback(val);
+        //datePickerCallback(val);
       }
     };
-var datePickerCallback = function (val) {
-  if (typeof(val) === 'undefined') {
-    console.log('No date selected');
-  } else {
-    $scope.datepickerObject.inputDate = val;
-    console.log('Selected date is : ', val)
-  }
-};
+	/*var datePickerCallback = function (val) {
+	  if (typeof(val) === 'undefined') {
+	    console.log('No date selected');
+	  } else {
+	    $scope.datepickerObject.inputDate = val;
+	    console.log('Selected date is : ', val)
+	  }
+	};*/
 
 
-  $scope.alertTimes = [ 'month', 'week', '5 min'];
-  function setSerie(){
-      //console.log($stateParams);
-        if($stateParams.id) {
-          
-          $scope.testa = Series.getDetailSeries($stateParams.id).then(function(data){
-            $scope.serie = data;   
-            $scope.serie.group = 'test';
-          }, function(msg){
-              alert(msg);
-          });       
-        }
+	$scope.$watch($stateParams.id, setSerie);
+	function setSerie(){
+	    if($stateParams.id) {
+	      $scope.testa = Series.getDetailSeries($stateParams.id).then(function(data){
+	        $scope.serie = data;   
+	      }, function(msg){
+	          alert(msg);
+	      });       
+	    }
+	};
 
-        
-        //console.log(data);
-
-  /*          $http.get("http://api.themoviedb.org/3/tv/" + $stateParams.id + "?api_key=61f7950a0c9e1089cf27fbcc524ec7db&language=fr")
-                .success(function(data, status) {
-                    alert('lol');
-                factory.series = data;
-                    deferred.resolve(factory.series);
-                }).error(function(data, status) {
-                    alert('lil');
-                    deferred.reject('Erreur requete Ajax');
-                });
-*/
-  };
-
-   $scope.$watch($stateParams.id, setSerie);
-  $scope.search = function(serie) {
+	$scope.search = function(serie) {
     
     $ionicLoading.show({
       template: 'Search...'
     });
-
 
     $scope.test = Series.getSearchSeries(serie).then(function(data){
         $scope.series = data.results;
     }, function(msg){
         alert(msg);
     });
-    $ionicLoading.hide();
 
-  //  alert(serie);
+    $ionicLoading.hide();
   }
 
-  $scope.looool = function() {
+  /*$scope.looool = function() {
       
       var options = {
       date: new Date(),
@@ -139,52 +143,51 @@ var datePickerCallback = function (val) {
       });
 
     }, false);
-  }
+  }*/
 
-   $scope.takePicture = function() {
+	$scope.takePicture = function() {
         
+		document.addEventListener("deviceready", function () {
 
-document.addEventListener("deviceready", function () {
+		var options = {
+		  quality: 50,
+		  destinationType: Camera.DestinationType.DATA_URL,
+		  sourceType: Camera.PictureSourceType.CAMERA,
+		  allowEdit: true,
+		  encodingType: Camera.EncodingType.JPEG,
+		  targetWidth: 100,
+		  targetHeight: 100,
+		  popoverOptions: CameraPopoverOptions,
+		  saveToPhotoAlbum: false,
+		  correctOrientation:true
+		};
 
-    var options = {
-      quality: 50,
-      destinationType: Camera.DestinationType.DATA_URL,
-      sourceType: Camera.PictureSourceType.CAMERA,
-      allowEdit: true,
-      encodingType: Camera.EncodingType.JPEG,
-      targetWidth: 100,
-      targetHeight: 100,
-      popoverOptions: CameraPopoverOptions,
-      saveToPhotoAlbum: false,
-      correctOrientation:true
-    };
+		$cordovaCamera.getPicture(options).then(function(imageData) {
+		  var image = document.getElementById('myImage');
+		  //image.src = "data:image/jpeg;base64," + imageData;
+		  $scope.serie.imgURI = "data:image/jpeg;base64," + imageData;
+		}, function(err) {
+		  alert('error');// error
+		});
 
-    $cordovaCamera.getPicture(options).then(function(imageData) {
-      var image = document.getElementById('myImage');
-      //image.src = "data:image/jpeg;base64," + imageData;
-      $scope.imgURI = "data:image/jpeg;base64," + imageData;
-    }, function(err) {
-      alert('error');// error
-    });
+		}, false);
+		    //alert('lol');
+		    /*var options = { 
+		        quality : 75, 
+		        destinationType : Camera.DestinationType.DATA_URL, 
+		        sourceType : Camera.PictureSourceType.CAMERA, 
+		        allowEdit : true,
+		        encodingType: Camera.EncodingType.JPEG,
+		        targetWidth: 300,
+		        targetHeight: 300,
+		        popoverOptions: CameraPopoverOptions,
+		        saveToPhotoAlbum: false
+		    };
 
-  }, false);
-        //alert('lol');
-        /*var options = { 
-            quality : 75, 
-            destinationType : Camera.DestinationType.DATA_URL, 
-            sourceType : Camera.PictureSourceType.CAMERA, 
-            allowEdit : true,
-            encodingType: Camera.EncodingType.JPEG,
-            targetWidth: 300,
-            targetHeight: 300,
-            popoverOptions: CameraPopoverOptions,
-            saveToPhotoAlbum: false
-        };
- 
-        $cordovaCamera.getPicture(options).then(function(imageData) {
-            $scope.imgURI = "data:image/jpeg;base64," + imageData;
-        }, function(err) {
-            // An error occured. Show a message to the user
-        });*/
+		    $cordovaCamera.getPicture(options).then(function(imageData) {
+		        $scope.imgURI = "data:image/jpeg;base64," + imageData;
+		    }, function(err) {
+		        // An error occured. Show a message to the user
+		    });*/
     }
 })

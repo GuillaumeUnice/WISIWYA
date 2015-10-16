@@ -1,7 +1,7 @@
 <ion-view view-title="Setting serie">
 	<ion-content>
 	
-		<form ng-submit="addSerie(serie.group)">
+		<form ng-submit="addSerie(serie, datepickerObject, timePickerObject)">
 			<!--
 				<label class="item item-input">
 				  <span class="input-label">Date</span>
@@ -11,13 +11,42 @@
 				  <span class="input-label">Date</span>
 				  <input type="time">
 				</label>
-			-->
+			
 			{{ serie }}
-			<img ng-show="imgURI !== undefined" ng-src="{{imgURI}}">
+			-->
+			<img ng-show="imgURI !== undefined" ng-src="{{serie.imgURI}} ">
 		    <img ng-show="imgURI === undefined" ng-src="http://placehold.it/300x300">
 		    <button class="button button-positive" ng-click="takePicture()">Take Picture</button>
 
-			<button class="button button-positive" ng-click="looool()">DatePicker</button>
+			<p>Start Episode :</p>
+			<div class="row">
+				<div class="col">
+					<label class="item item-input">
+					  <span class="input-label">Season</span>
+					  <input type="number" max="{{serie.number_of_seasons}}" min="1" value="1">
+					</label>
+				</div>
+				<div class="col">
+					<label class="item item-input">
+						<span class="input-label">Episode</span>
+						<input type="number" max="{{serie.seasons[0].episode_count}}" min="1" value="1">
+					</label>
+				</div>
+			</div>
+
+			<p>Notification At : </p>
+			<ul class="list" ng-repeat="(key,val) in geolocalisations">
+
+			  <li class="item item-toggle">
+			     {{ key }}
+			     <label class="toggle toggle-positive">
+			       <input type="checkbox">
+			       <div class="track">
+			         <div class="handle"></div>
+			       </div>
+			     </label>
+			  </li>
+			</ul>
 
 			<p>Start date :</p>
 			<div class="row">
@@ -27,6 +56,7 @@
 					</ionic-datepicker>
   				</div>
   				<div class="col">
+  					
 					<ionic-timepicker input-obj="timePickerObject">
 					  <button class="button button-block button-positive overflowShow">
 					    <standard-time-meridian etime='timePickerObject.inputEpochTime'></standard-time-meridian>
@@ -35,7 +65,7 @@
   				</div>
   			</div>
 
-  			<p>Alert every {{ serie.group }}:</p>
+  			<p>Alert every :</p>
   			<div class="row" ng-repeat="alertTime in alertTimes">
 
 			  <label class="item item-radio col">
@@ -45,9 +75,8 @@
 			    </div>
 			    <i class="radio-icon ion-checkmark"></i>
 			  </label>
-
-
 			</div>
+
 			<div class="padding">
 				<button class="button button-block button-positive">Add</button>
 			</div>

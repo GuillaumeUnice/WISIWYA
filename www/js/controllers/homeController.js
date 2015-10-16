@@ -1,5 +1,17 @@
 app.controller('homeController', function($scope, $rootScope, $cordovaGeolocation, $ionicPlatform, $cordovaLocalNotification) {
+	$rootScope.geolocalisations = {
+		school : 
+		{
+			longitute : '47',
+			latitude : '7'
+		},
+		home :
 
+		{
+			longitute : '50',
+			latitude : '8'
+		}
+	}
 
   document.addEventListener("deviceready", function () {
 
