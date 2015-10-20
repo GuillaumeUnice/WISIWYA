@@ -1,101 +1,54 @@
 app.controller('homeController', function($scope, $rootScope, $cordovaGeolocation, $ionicPlatform, $cordovaLocalNotification) {
+
 	$rootScope.geolocalisations = {
 		school : 
 		{
-			longitute : '47',
-			latitude : '7'
+			longitude : '8',
+			latitude : '44'
 		},
 		home :
-
 		{
-			longitute : '50',
-			latitude : '8'
+			longitude : '6',
+			latitude : '44'
 		}
 	}
-
+  
   document.addEventListener("deviceready", function () {
+    $rootScope.$on('$cordovaLocalNotification:trigger', function(event, notification, state) {
+      if( $rootScope.serieSchedule[notification.id] !== undefined ) {
 
-
-	$ionicPlatform.ready(function () {
-
-/*
-  cordova.plugins.notification.local.on("click", function (notification, state) {
-                
-        }, this)*/
-	//	$scope.add = function() {
-        var alarmTime = new Date();
-        alarmTime.setMinutes(alarmTime.getMinutes() + 1);
-        $cordovaLocalNotification.add({
-            id: "1234",
-            date: alarmTime,
-            message: "This is a message",
-            title: "This is a title",
-            autoCancel: true,
-            sound: null
-        }).then(function () {
-            alert("The notification has been set");
-        });
-    //};
- 
-    $scope.isScheduled = function() {
-        $cordovaLocalNotification.isScheduled("1234").then(function(isScheduled) {
-            alert("Notification 1234 Scheduled: " + isScheduled);
-        });
-    }
-		 //$scope.scheduleEveryMinuteNotification = function () {
-	      $cordovaLocalNotification.schedule({
-	        id: 1,
-	        title: 'Title here',
-	        text: 'Text here',
-	        every: 'minute',
-	        icon: "http://image.tmdb.org/t/p/w300/dpNeXLEnuKzAvbNwveJhNEiQvXZ.jpg",
-            url: 'http://134.59.215.246:8100/#/serie/61889'
-	      }).then(function (result) {
-	        window.location.href = '#/serie';
-	        $state.go('serie');
-	      });
-	//    };
-	});
-
+          if($rootScope.serieSchedule[notification.id].seasons[0].episode_count ==  $rootScope.serieSchedule[notification.id].episode) {
+            if($rootScope.serieSchedule[notification.id].number_of_seasons ==  $rootScope.serieSchedule[notification.id].season) {
+              cordova.plugins.notification.local.cancel(notification.id, function() {
+                  $rootScope.serieSchedule[notification.id] = null;
+                  alert($rootScope.serieSchedule[notification.id].original_name + " is end!!!");
+              });
+            } else {
+              $rootScope.serieSchedule[notification.id].season++;    
+            }
+            
+          } else {
+            $rootScope.serieSchedule[notification.id].episode++;  
+          }
+        }
+    });
 
     var posOptions = {timeout: 10000, enableHighAccuracy: false};
     $cordovaGeolocation
       .getCurrentPosition(posOptions)
       .then(function (position) {
-        var lat  = position.coords.latitude
-        var long = position.coords.longitude
-        alert('latitude : ' + position.coords.latitude + ' longitude : ' + position.coords.longitude);
+        for(var index in $rootScope.geolocalisations) { 
+          var location = $rootScope.geolocalisations[index];
+          if((location.longitude == Math.ceil(position.coords.longitude)) 
+            && (location.latitude == Math.ceil(position.coords.latitude))) {
+            $rootScope.localisation = index;
+          }
+        }
+        if($rootScope.localisation === undefined) { // default value
+          $rootScope.localisation = 'school';  
+        }
       }, function(err) {
-        alert('error');// error
-      });
-
-
-    var watchOptions = {
-      timeout : 3000,
-      enableHighAccuracy: false // may cause errors if true
-    };
-
-    var watch = $cordovaGeolocation.watchPosition(watchOptions);
-    watch.then(
-      null,
-      function(err) {
-        alert('error');// error
-      },
-      function(position) {
-        alert('latitude : ' + position.coords.latitude + ' longitude : ' + position.coords.longitude);
-        var lat  = position.coords.latitude
-        var long = position.coords.longitude
-    });
-
-
-    watch.clearWatch();
-    // OR
-    $cordovaGeolocation.clearWatch(watch)
-      .then(function(result) {
-        // success
-        alert('latitude : ' + position.coords.latitude + ' longitude : ' + position.coords.longitude);
-        }, function (error) {
-        alert('error');// error
+        alert('GPS error');
       });
   });
 })

@@ -2,9 +2,9 @@
 	<ion-content>
 	  <form class="list" ng-submit="search(serie)">
 	  	
-		<label class="item item-input">
+		<label class="item item-input" focus-me>
 			<i class="icon ion-search placeholder-icon"></i>
-			<input  type="text" placeholder="Search" ng-model="serie">
+			<input  type="text" placeholder="Search" ng-model="serie" >
 		</label>
 		<div class="padding">
 			<button class="button button-block button-positive">Send</button>
@@ -13,9 +13,18 @@
 
 	  	<div ng-repeat="serie in series" class="list">
 		    <a class="item item-thumbnail-left" href="#serie/{{ serie.id }}">
-		      <img src="http://image.tmdb.org/t/p/w500/{{ serie.backdrop_path}}">
-		      <h2>{{ serie.original_name }}</h2>
-		      <p>{{ serie.overview | limitTo:10  }}</p>
+			    <img ng-show="serie.poster_path !== undefined" ng-src="http://image.tmdb.org/t/p/w300/{{ serie.poster_path }} ">
+			    <img ng-show="(serie.poster_path === undefined) && serie.backdrop_path !== undefined" ng-src="http://image.tmdb.org/t/p/w300/{{ serie.backdrop_path }}">
+			      
+			    <h2>{{ serie.original_name }}</h2>
+			    <p>{{ serie.overview  }}</p>
+
+				<div class="row">
+					<div class="col col-33 col-offset-67">
+					    <span style="padding: 0; margin: 0px;" class="button button-icon icon-right ion-ios-arrow-forward"></span>
+					    <span style="padding: 0; margin: 0px;"  class="button button-icon icon-right ion-ios-arrow-forward"></span>
+					</div>
+				</div>
 		    </a>
 		</div>
 	</ion-content>

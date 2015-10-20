@@ -1,5 +1,27 @@
 <ion-view view-title="Home">
 	<ion-content>
-		<a ui-sref="serie">Ajouter une série</a>
+	<div class="padding">
+		<a ui-sref="serie">
+			<div class="padding">
+				<button class="button button-block button-positive">Add serie</button>
+			</div>
+		</a>
+	</div>
+		<div class="row">
+			<p class="energized col" ng-hide="serieSchedule">No notification! It's time to add a new serie click above please!!!</p>
+		</div>
+		<div ng-repeat="serie in serieSchedule | filter:{r: '!null'}" class="list">
+		    <a class="item item-thumbnail-left" href="#serie/{{ serie.id }}">
+			    <img ng-show="serie.poster_path !== undefined && serie.imgURI === undefined" ng-src="http://image.tmdb.org/t/p/w300/{{ serie.poster_path }} ">
+			    <img ng-show="(serie.poster_path === undefined) && serie.backdrop_path !== undefined && serie.imgURI === undefined" ng-src="http://image.tmdb.org/t/p/w300/{{ serie.backdrop_path }}">
+			    <img ng-show="serie.imgURI !== undefined" style="width-max: 300px !important" ng-src="{{ serie.imgURI }}">
+
+				<h2>{{ serie.original_name }}</h2>
+				<p>saison : {{ serie.season  }}</p>
+				<p>episode : {{ serie.episode  }}</p>
+				<progress max="100" value="{{ ((serie.season * serie.episode) / (serie.number_of_seasons * serie.seasons[0].episode_count)) * 100 }}"></progress>
+
+		    </a>
+		</div>
 	</ion-content>
 </ion-view>
