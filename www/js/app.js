@@ -37,12 +37,6 @@ var app = angular.module('starter', ['ionic', 'ionic-timepicker', 'ionic-datepic
     controller : 'serieController'
   })
 
-  /*$stateProvider.state('setting', {
-    url : '/setting',
-    templateUrl : 'templates/setting.html',
-    controller : 'settingController'
-  })*/
-
   $urlRouterProvider.otherwise('/home');
 });
 

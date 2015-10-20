@@ -58,12 +58,13 @@ app.controller('serieController', function($scope, $rootScope, $state, $statePar
 		  sourceType: Camera.PictureSourceType.CAMERA,
 		  allowEdit: true,
 		  encodingType: Camera.EncodingType.JPEG,
-		  targetWidth: 100,
-		  targetHeight: 100,
+		  targetWidth: 200,
+		  targetHeight: 200,
 		  popoverOptions: CameraPopoverOptions,
 		  saveToPhotoAlbum: false,
 		  correctOrientation:true
 		};
+
 		$scope.isTakePicture = true;
 		$cordovaCamera.getPicture(options).then(function(imageData) {
 		  var image = document.getElementById('myImage');
@@ -71,6 +72,36 @@ app.controller('serieController', function($scope, $rootScope, $state, $statePar
 		  $scope.isTakePicture = false;
 		}, function(err) {
 		  alert('error take picture');
+		});
+
+		}, false);
+    }
+
+
+	$scope.choosePicture = function() {
+        
+		document.addEventListener("deviceready", function () {
+
+		var options = {
+		  quality: 50,
+		  destinationType: Camera.DestinationType.DATA_URL,
+		  allowEdit: true,
+		  sourceType: Camera.PictureSourceType.PHOTOLIBRARY,
+		  encodingType: Camera.EncodingType.JPEG,
+		  targetWidth: 200,
+		  targetHeight: 200,
+		  popoverOptions: CameraPopoverOptions,
+		  saveToPhotoAlbum: false,
+		  correctOrientation:true
+		};
+
+		$scope.isTakePicture = true;
+		$cordovaCamera.getPicture(options).then(function(imageData) {
+		  //var image = document.getElementById('myImage');
+		  $scope.serie.imgURI = "data:image/jpeg;base64," + imageData;
+		  $scope.isTakePicture = false;
+		}, function(err) {
+		  alert('error choose picture');
 		});
 
 		}, false);
@@ -89,16 +120,6 @@ app.controller('serieController', function($scope, $rootScope, $state, $statePar
 
 	$scope.addSerie = function(serie, datepickerObject, timePickerObject, geolocation) {
 		if(!$scope.isTakePicture){
-			
-		
-	       	
-
-			/*if(typeof($rootScope.serieSchedule[serie.id].imgURI) != "undefined") {
-				$rootScope.serieSchedule[serie.id].poster_path = $rootScope.serieSchedule[serie.id].imgURI;
-			} else {
-				$rootScope.serieSchedule[serie.id].poster_path = "http://image.tmdb.org/t/p/w300/" + $rootScope.serieSchedule[serie.id].poster_path;
-			}*/
-			
 
 			var selectedTime = new Date(timePickerObject.inputEpochTime * 1000);
 
@@ -114,13 +135,21 @@ app.controller('serieController', function($scope, $rootScope, $state, $statePar
 			$rootScope.serieSchedule[serie.id].startAt.setUTCHours(selectedTime.getUTCHours());
 			$rootScope.serieSchedule[serie.id].startAt.setUTCMinutes(selectedTime.getUTCMinutes());
 		 
+		 	if(typeof(serie.imgURI) !== undefined) {
+				serie.icon = $rootScope.serieSchedule[serie.id].imgURI;
+			} else if(typeof(serie.poster_path) !== undefined){
+				serie.icon = "http://image.tmdb.org/t/p/w300/" + $rootScope.serieSchedule[serie.id].poster_path;
+			} else if(typeof(serie.backdrop_path) !== undefined) {
+				serie.icon = "http://image.tmdb.org/t/p/w300/" + $rootScope.serieSchedule[serie.id].backdrop_path;
+			}
+			
 			if($rootScope.serieSchedule[serie.id].geolocation[$rootScope.localisation]) {
 				$cordovaLocalNotification.schedule({
 			        id: serie.id,
 			        title: 'Don\'t forgets',
 			        text: serie.original_name,
 			        every: $rootScope.serieSchedule[serie.id].group,
-			       	//icon: serie.imgURI
+			       	icon: serie.icon
 			    });
 
 			    $state.go('home');
