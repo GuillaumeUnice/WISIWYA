@@ -14,7 +14,7 @@
 		    <a class="item item-thumbnail-left" href="#serie/{{ serie.id }}">
 			    <img ng-show="serie.poster_path !== undefined && serie.imgURI === undefined" ng-src="http://image.tmdb.org/t/p/w300/{{ serie.poster_path }} ">
 			    <img ng-show="(serie.poster_path === undefined) && serie.backdrop_path !== undefined && serie.imgURI === undefined" ng-src="http://image.tmdb.org/t/p/w300/{{ serie.backdrop_path }}">
-			    		    	<img class="responsive-image" style="width: 100px !important; height: 100px !important;" ng-show="serie.imgURI !== undefined" ng-src="{{ serie.imgURI }}">
+			    <img class="responsive-image" style="left: 0; margin-right: 5px; float: left; width: 100px !important; height: 100px !important;" ng-show="serie.imgURI !== undefined" ng-src="{{ serie.imgURI }}">
 
 				<h2>{{ serie.original_name }}</h2>
 				<p>saison : {{ serie.season  }}</p>

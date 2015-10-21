@@ -135,14 +135,14 @@ app.controller('serieController', function($scope, $rootScope, $state, $statePar
 			$rootScope.serieSchedule[serie.id].startAt.setUTCHours(selectedTime.getUTCHours());
 			$rootScope.serieSchedule[serie.id].startAt.setUTCMinutes(selectedTime.getUTCMinutes());
 		 
-		 	if(typeof(serie.imgURI) !== undefined) {
+		 	if(serie.imgURI !== undefined) {
 				serie.icon = $rootScope.serieSchedule[serie.id].imgURI;
-			} else if(typeof(serie.poster_path) !== undefined){
-				serie.icon = "http://image.tmdb.org/t/p/w300/" + $rootScope.serieSchedule[serie.id].poster_path;
-			} else if(typeof(serie.backdrop_path) !== undefined) {
-				serie.icon = "http://image.tmdb.org/t/p/w300/" + $rootScope.serieSchedule[serie.id].backdrop_path;
+			} else if(serie.poster_path !== undefined){
+				serie.icon = "http://image.tmdb.org/t/p/w300" + $rootScope.serieSchedule[serie.id].poster_path;
+			} else if(serie.backdrop_path !== undefined) {
+				serie.icon = "http://image.tmdb.org/t/p/w300" + $rootScope.serieSchedule[serie.id].backdrop_path;
 			}
-			
+
 			if($rootScope.serieSchedule[serie.id].geolocation[$rootScope.localisation]) {
 				$cordovaLocalNotification.schedule({
 			        id: serie.id,
@@ -151,10 +151,10 @@ app.controller('serieController', function($scope, $rootScope, $state, $statePar
 			        every: $rootScope.serieSchedule[serie.id].group,
 			       	icon: serie.icon
 			    });
-
-			    $state.go('home');
-			    alert('This serie has been added!!!');
 			}	
+
+			$state.go('home');
+			alert('This serie has been added!!!');
 		}
 	} // addSerie()
 

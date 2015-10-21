@@ -20,8 +20,8 @@ app.controller('homeController', function($scope, $rootScope, $cordovaGeolocatio
           if($rootScope.serieSchedule[notification.id].seasons[0].episode_count ==  $rootScope.serieSchedule[notification.id].episode) {
             if($rootScope.serieSchedule[notification.id].number_of_seasons ==  $rootScope.serieSchedule[notification.id].season) {
               cordova.plugins.notification.local.cancel(notification.id, function() {
-                  $rootScope.serieSchedule[notification.id] = null;
                   alert($rootScope.serieSchedule[notification.id].original_name + " is end!!!");
+                  $rootScope.serieSchedule[notification.id] = null;
               });
             } else {
               $rootScope.serieSchedule[notification.id].season++;    

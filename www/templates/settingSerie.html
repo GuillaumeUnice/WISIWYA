@@ -86,12 +86,12 @@
 				</div>
 			</div>
 
-			<p>Notification At {{ Object.keys(geolocation).length }}: </p>
+			<p>Notification At : </p>
 			<ul class="list padding">
 			  <li class="item item-toggle" ng-repeat="(key,val) in geolocalisations">
 			  	{{ key }}
 			     <label class="toggle toggle-positive">
-			       <input type="checkbox" name="notification_at" required ng-model="geolocation[key]" value="val">
+			       <input type="checkbox" name="notification_at" ng-model="geolocation[key]" value="val">
 			       <div class="track">
 			         <div class="handle"></div>
 			       </div>
